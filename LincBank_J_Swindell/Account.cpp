@@ -18,18 +18,17 @@ void swap(vector<Transaction*> &historyCopy, int a, int b) {
 }
 
 int partition(vector<Transaction*> &historyCopy, int low, int high) {
-
-	Transaction* pivot = historyCopy[high];
+	int pivotindex = high;
 
 	int i = (low - 1);
 
 	for (int j = low; j < high; j++) {
-		if (historyCopy[j] <= pivot) {
+		if (historyCopy[j] < historyCopy[pivotindex]) {
 			i++;
 			swap(historyCopy, i, j);
 		}
 	}
-	swap(historyCopy, i + 1, high);
+	swap(historyCopy, i + 1, pivotindex);
 
 	return (i + 1);
 }

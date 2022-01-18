@@ -257,6 +257,13 @@ int main()
 				cout << "you have provided an invalid number of parameters for this command. Please try again" << endl;
 			}
 		}
+		else if (command.compare("test") == 0)
+		{
+			Transaction* a = new Transaction(TransactionType::deposit, 100);
+			Transaction* b = new Transaction(TransactionType::initialDeposit, 50);
+			cout << (a < b) << endl;
+			cout << (a > b) << endl;
+		}
     }
 
 	cout << "Press any key to quit...";
