@@ -29,19 +29,19 @@ Current::Current(int id, float amount) : Account(id) {
 	checkValidDeposit(amount);
 	balance = amount;
 	overdraft = 500.0;
-	history.push_back(Transaction(TransactionType::initialDeposit, amount));
+	history.push_back(new Transaction(TransactionType::initialDeposit, amount));
 }
 
 void Current::deposit(float amount) {
 	checkValidDeposit(amount);
 	balance += amount;
-	history.push_back(Transaction(TransactionType::deposit, amount));
+	history.push_back(new Transaction(TransactionType::deposit, amount));
 }
 
 void Current::withdraw(float amount) {
 	checkValidWithdrawal(amount, balance, overdraft);
 	balance -= amount;
-	history.push_back(Transaction(TransactionType::withdraw, amount));
+	history.push_back(new Transaction(TransactionType::withdraw, amount));
 }
 
 void Current::transferTo(Account* to, float amount) {
@@ -53,7 +53,7 @@ string Current::toString() const {
 	stringstream ss;
 	ss << "Current account | Balance: \x9C" << balance << "\n";
 	for (auto& t : history) {
-		ss << t;
+		ss << *t;
 	}
 	return ss.str();
 }

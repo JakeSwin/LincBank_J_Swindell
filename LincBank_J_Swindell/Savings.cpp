@@ -28,19 +28,19 @@ Savings::Savings(int id, bool isIsa, float amount) : Account(id) {
 	interestRate = (isIsa) ? (float)1.15 : (float)0.85;
 	isa = isIsa;
 	balance = amount;
-	history.push_back(Transaction(TransactionType::initialDeposit, amount));
+	history.push_back(new Transaction(TransactionType::initialDeposit, amount));
 }
 
 void Savings::deposit(float amount) {
 	checkValidDeposits(amount);
 	balance += amount;
-	history.push_back(Transaction(TransactionType::deposit, amount));
+	history.push_back(new Transaction(TransactionType::deposit, amount));
 }
 
 void Savings::withdraw(float amount) {
 	checkValidWithdrawal(amount, balance);
 	balance -= amount;
-	history.push_back(Transaction(TransactionType::withdraw, amount));
+	history.push_back(new Transaction(TransactionType::withdraw, amount));
 }
 
 float Savings::computeInterest(float years) {
@@ -51,7 +51,7 @@ string Savings::toString() const {
 	stringstream ss;
 	ss << "Savings account | Balance: \x9C" << balance << "\n";
 	for (auto& t : history) {
-		ss << t;
+		ss << *t;
 	}
 	return ss.str();
 }

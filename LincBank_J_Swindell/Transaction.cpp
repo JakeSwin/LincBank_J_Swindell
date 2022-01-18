@@ -1,4 +1,4 @@
-#define _CRT_SECURE_NO_WARNINGS
+
 #include <iostream>
 #include <sstream>
 #include <string>
@@ -70,8 +70,10 @@ Transaction::Transaction(TransactionType t, float v) {
 
 string Transaction::toString() const {
 	stringstream ss;
+	char tmBuff[30];
+	ctime_s(tmBuff, sizeof(tmBuff), &timestamp);
 	char posOrNeg = (type == TransactionType::withdraw || type == TransactionType::transferTo) ? '-' : '\0';
-	ss << "-- " << desc << ": " << posOrNeg << "\x9C" << value << " on " << ctime(&timestamp);
+	ss << "-- " << desc << ": " << posOrNeg << "\x9C" << value << " on " << tmBuff;
 	return ss.str();
 }
 

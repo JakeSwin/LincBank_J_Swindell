@@ -116,7 +116,7 @@ int main()
 
 				int userInput = stoi(parameters[1]);
 
-				if (userInput < 1 || (unsigned int)userInput > openAccounts.size()) {
+				if (userInput < 1 || userInput > openAccounts.size()) {
 					cout << "account number does not exist" << endl;
 				}
 				else {
@@ -232,20 +232,20 @@ int main()
 				cout << "you have provided an invalid number of parameters for this command. Please try again" << endl;
 			}
 		}
-		else if (command.compare("search"))
+		else if (command.compare("search") == 0)
 		{
 			try {
 				parameters.at(1);
 				if (parameters.size() > 2) { throw out_of_range("too many parameters"); }
 
-				float years = stof(parameters[1]);
+				float amount = stoi(parameters[1]);
 
 				if (mostRecentAccount) {
-					vector<Transaction> sortedHistory = mostRecentAccount->sortTransactions();
+					vector<Transaction*> sortedHistory = mostRecentAccount->sortTransactions();
 
 					stringstream ss;
 					for (auto& t : sortedHistory) {
-						ss << t;
+						ss << *t;
 					}
 					cout << ss.str();
 				}
