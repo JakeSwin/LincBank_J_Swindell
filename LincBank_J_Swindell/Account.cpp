@@ -11,29 +11,29 @@ int Account::getId() const{
 	return id;
 }
 
-void swap(vector<Transaction*> &historyCopy, int a, int b) {
+void swap(vector<Transaction*>& historyCopy, int a, int b) {
 	Transaction* temp = historyCopy[a];
 	historyCopy[a] = historyCopy[b];
 	historyCopy[b] = temp;
 }
 
-int partition(vector<Transaction*> &historyCopy, int low, int high) {
-	int pivotindex = high;
+int partition(vector<Transaction*>& historyCopy, int low, int high) {
+	Transaction pivot = *historyCopy[high];
 
 	int i = (low - 1);
 
 	for (int j = low; j < high; j++) {
-		if (historyCopy[j] < historyCopy[pivotindex]) {
+		if (*historyCopy[j] < pivot) {
 			i++;
 			swap(historyCopy, i, j);
 		}
 	}
-	swap(historyCopy, i + 1, pivotindex);
+	swap(historyCopy, i + 1, high);
 
 	return (i + 1);
 }
 
-void quicksort(vector<Transaction*> &historyCopy, int low, int high) {
+void quicksort(vector<Transaction*>& historyCopy, int low, int high) {
 	if (low < high) {
 		int part = partition(historyCopy, low, high);
 
