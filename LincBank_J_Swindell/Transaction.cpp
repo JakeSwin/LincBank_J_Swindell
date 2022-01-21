@@ -77,25 +77,7 @@ string Transaction::toString() const {
 	return ss.str();
 }
 
-bool Transaction::operator< (const Transaction& t) {
-	if (value < t.value) { return true; }
-	return false;
-}
-
-bool Transaction::operator> (const Transaction& t) {
-	if (value > t.value) { return true; }
-	return false;
-}
-
-bool Transaction::operator<= (const Transaction& t) {
-	if (value <= t.value) { return true; }
-	return false;
-}
-
-bool Transaction::operator>= (const Transaction& t) {
-	if (value >= t.value) { return true; }
-	return false;
-}
+Transaction::operator float() const { return value; }
 
 /// <summary>
 /// Overrides << operator to output correctly formatted data from Transaction object.

@@ -12,13 +12,24 @@ private:
 	TransactionType type;
 	float value;
 	int transferAccount;
+	operator float() const;
 public:
 	Transaction(TransactionType, int, float);
 	Transaction(TransactionType, float);
-	bool operator<(const Transaction& t);
-	bool operator>(const Transaction& t);
-	bool operator<=(const Transaction& t);
-	bool operator>=(const Transaction& t);
+	template<typename T>
+	bool operator<(const T& other) { return value < (float)other; };
+	template<typename T>
+	bool operator>(const T& other) { return value > (float)other; };
+	template<typename T>
+	bool operator<=(const T& other) { return value <= (float)other; };
+	template<typename T>
+	bool operator>=(const T& other) { return value >= (float)other; };
+	template<typename T>
+	bool operator==(const T& other) { return value == (float)other; };
+	template<typename T>
+	float operator+(const T& other) { return value + (float)other; };
+	template<typename T>
+	float operator-(const T& other) { return value - (float)other; };
 	friend ostream& operator<<(ostream& os, const Transaction& a);
 	string toString() const;
 };

@@ -15,6 +15,7 @@ public:
 	Account(int);
 	int getId() const;
 	vector<Transaction*> sortTransactions();
+	Transaction* findTransactionByAmount(float amount);
 	virtual string toString() const = 0;
 	virtual void deposit(float) = 0;
 	virtual void withdraw(float) = 0;

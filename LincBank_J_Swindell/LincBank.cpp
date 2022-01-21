@@ -32,8 +32,18 @@ void displayOptions() {
 	cout << "deposit [sum]: deposit funds into most recently viewed account" << endl;
 	cout << "transfer [from] [to] [sum]: transfer funds between accounts" << endl;
 	cout << "project [years]: project balance forward in time" << endl;
+	cout << "search [sum]: search for a specific transaction by sum from most recently viewed account" << endl;
 	cout << "exit: close this application" << endl;
 	cout << "options: view these options again" << endl;
+}
+
+const void checkNumberOfParameters(const vector<string>& parameters, unsigned int num) {
+	if (parameters.size() < num+1) {
+		throw out_of_range("Too few parameters!!! You need to provide " + to_string(num) + " parameters for this command");
+	}
+	else if (parameters.size() > num+1) {
+		throw out_of_range("Too many parameters!!! You need to provide " + to_string(num) + " parameters for this command");
+	}
 }
 
 int main()
@@ -78,8 +88,7 @@ int main()
 			// allow a user to open an account
 			// e.g., Account* a = new Savings(...);
 			try {
-				parameters.at(2);
-				if (parameters.size() > 3) { throw out_of_range("too many parameters"); }
+				checkNumberOfParameters(parameters, 2);
 
 				float initialDeposit = stof(parameters[2]);
 				int newAccountId = openAccounts.size();
@@ -104,17 +113,16 @@ int main()
 			catch (invalid_argument const& e) {
 				cout << e.what() << endl;
 			}
-			catch (out_of_range) {
-				cout << "you have provided an invalid number of parameters for this command. Please try again" << endl;
+			catch (out_of_range const& e) {
+				cout << e.what() << endl;
 			}
 		}
 		else if (command.compare("view") == 0)
 		{
 			try {
-				parameters.at(1);
-				if (parameters.size() > 2) { throw out_of_range("too many parameters"); }
+				checkNumberOfParameters(parameters, 1);
 
-				int userInput = stoi(parameters[1]);
+				unsigned int userInput = stoi(parameters[1]);
 
 				if (userInput < 1 || userInput > openAccounts.size()) {
 					cout << "account number does not exist" << endl;
@@ -127,8 +135,9 @@ int main()
 			catch (invalid_argument const& e) {
 				cout << e.what() << endl;
 			}
-			catch (out_of_range) {
-				cout << "you have provided an invalid number of parameters for this command. Displaying all accounts instead" << endl;
+			catch (out_of_range const& e) {
+				cout << e.what() << endl;
+				cout << "Displaying all accounts instead" << endl;
 				for (auto& a : openAccounts) {
 					cout << *a;
 				}
@@ -139,8 +148,7 @@ int main()
 		else if (command.compare("withdraw") == 0)
 		{
 			try {
-				parameters.at(1);
-				if (parameters.size() > 2) { throw out_of_range("too many parameters"); }
+				checkNumberOfParameters(parameters, 1);
 
 				float amount = stof(parameters[1]);
 
@@ -152,15 +160,14 @@ int main()
 			catch (invalid_argument const& e) {
 				cout << e.what() << endl;
 			}
-			catch (out_of_range) {
-				cout << "you have provided an invalid number of parameters for this command. Please try again" << endl;
+			catch (out_of_range const& e) {
+				cout << e.what() << endl;
 			}
 		}
 		else if (command.compare("deposit") == 0)
 		{
 			try {
-				parameters.at(1);
-				if (parameters.size() > 2) { throw out_of_range("too many parameters"); }
+				checkNumberOfParameters(parameters, 1);
 
 				float amount = stof(parameters[1]);
 
@@ -172,15 +179,14 @@ int main()
 			catch (invalid_argument const& e) {
 				cout << e.what() << endl;
 			}
-			catch (out_of_range) {
-				cout << "you have provided an invalid number of parameters for this command. Please try again" << endl;
+			catch (out_of_range const& e) {
+				cout << e.what() << endl;
 			}
 		}
 		else if (command.compare("transfer") == 0)
 		{
 			try {
-				parameters.at(3);
-				if (parameters.size() > 4) { throw out_of_range("too many parameters"); }
+				checkNumberOfParameters(parameters, 3);
 
 				int userFromAccount = stoi(parameters[1]);
 				int userToAccount = stoi(parameters[2]);
@@ -201,15 +207,14 @@ int main()
 			catch (invalid_argument const& e) {
 				cout << e.what() << endl;
 			}
-			catch (out_of_range) {
-				cout << "you have provided an invalid number of parameters for this command. Please try again" << endl;
+			catch (out_of_range const& e) {
+				cout << e.what() << endl;
 			}
 		}
 		else if (command.compare("project") == 0)
 		{
 			try {
-				parameters.at(1);
-				if (parameters.size() > 2) { throw out_of_range("too many parameters"); }
+				checkNumberOfParameters(parameters, 1);
 
 				float years = stof(parameters[1]);
 
@@ -228,46 +233,46 @@ int main()
 			catch (invalid_argument const& e) {
 				cout << e.what() << endl;
 			}
-			catch (out_of_range) {
-				cout << "you have provided an invalid number of parameters for this command. Please try again" << endl;
+			catch (out_of_range const& e) {
+				cout << e.what() << endl;
 			}
 		}
 		else if (command.compare("search") == 0)
 		{
 			try {
-				parameters.at(1);
-				if (parameters.size() > 2) { throw out_of_range("too many parameters"); }
+				checkNumberOfParameters(parameters, 1);
 
-				float amount = stoi(parameters[1]);
+				float amount = stof(parameters[1]);
 
 				if (mostRecentAccount) {
-					vector<Transaction*> sortedHistory = mostRecentAccount->sortTransactions();
+					Transaction* foundTransaction = mostRecentAccount->findTransactionByAmount(amount);
 
-					stringstream ss;
-					for (auto& t : sortedHistory) {
-						ss << *t;
-					}
-					cout << ss.str();
+					cout << "The Transaction that is closest to " + parameters[1] + " is:" << endl;
+					cout << *foundTransaction << endl;
 				}
 			}
 			catch (invalid_argument const& e) {
 				cout << e.what() << endl;
 			}
-			catch (out_of_range) {
-				cout << "you have provided an invalid number of parameters for this command. Please try again" << endl;
+			catch (out_of_range const& e) {
+				cout << e.what() << endl;
 			}
 		}
 		else if (command.compare("test") == 0)
 		{
-			Transaction* a = new Transaction(TransactionType::deposit, 100);
-			Transaction* b = new Transaction(TransactionType::initialDeposit, 50);
-			cout << (a < b) << endl;
-			cout << (a > b) << endl;
+			/*Transaction* a = new Transaction(TransactionType::deposit, 150);
+			Transaction* b = new Transaction(TransactionType::deposit, 50);
+
+			cout << "Test 1: " << (*a < *b) << endl;
+			cout << "Test 2: " << (*b > *a) << endl;
+			cout << "Test 3: " << (*a >= 100) << endl;
+			cout << "Test 4: " << (*b <= 100) << endl;
+			cout << "Test 5: " << (*a == *b) << endl;*/
 		}
     }
 
 	cout << "Press any key to quit...";
-	getchar();
+	(void)getchar();
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
