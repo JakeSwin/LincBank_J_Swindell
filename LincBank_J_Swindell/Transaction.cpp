@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include <sstream>
 #include <string>
@@ -19,13 +18,13 @@ Transaction::Transaction(TransactionType t, int a, float v) {
 	string d;
 	switch (t) {
 	case TransactionType::initialDeposit:
-		throw std::invalid_argument("account number argument is irrelevent for TransactionTypes other than transferTo and transferFrom");
+		throw runtime_error("account number argument is irrelevent for TransactionTypes other than transferTo and transferFrom");
 		break;
 	case TransactionType::deposit:
-		throw std::invalid_argument("account number argument is irrelevent for TransactionTypes other than transferTo and transferFrom");
+		throw runtime_error("account number argument is irrelevent for TransactionTypes other than transferTo and transferFrom");
 		break;
 	case TransactionType::withdraw:
-		throw std::invalid_argument("account number argument is irrelevent for TransactionTypes other than transferTo and transferFrom");
+		throw runtime_error("account number argument is irrelevent for TransactionTypes other than transferTo and transferFrom");
 		break;
 	case TransactionType::transferTo: d = "transfer to account " + to_string(a); break;
 	case TransactionType::transferFrom: d = "transfer from account " + to_string(a); break;
@@ -53,10 +52,10 @@ Transaction::Transaction(TransactionType t, float v) {
 		case TransactionType::deposit: d = "deposit"; break;
 		case TransactionType::withdraw: d = "withdraw"; break;
 		case TransactionType::transferTo: 
-			throw std::invalid_argument("For transferTo and transferFrom types, please provide an additional account number argument");
+			throw runtime_error("For transferTo and transferFrom types, please provide an additional account number argument");
 			break;
 		case TransactionType::transferFrom: 
-			throw std::invalid_argument("For transferTo and transferFrom types, please provide an additional account number argument");
+			throw runtime_error("For transferTo and transferFrom types, please provide an additional account number argument");
 			break;
 	}
 	desc = d;
@@ -68,21 +67,32 @@ Transaction::Transaction(TransactionType t, float v) {
 	timestamp = time(0);
 }
 
+/// <summary>
+/// Formats and returns output information of Transaction object
+/// </summary>
+/// <returns>Formatted output string of Transaction object</returns>
 string Transaction::toString() const {
 	stringstream ss;
+	// charater buffer used to output results of ctime_s
 	char tmBuff[30];
+	// Converts time_t timestamp into correctly formatted string and ouputs into buffer tmBuff
 	ctime_s(tmBuff, sizeof(tmBuff), &timestamp);
+	// If transaction is of type withdraw or transferTo then append a minus sign to string to indicate a negative amount
 	char posOrNeg = (type == TransactionType::withdraw || type == TransactionType::transferTo) ? '-' : '\0';
+	// Append info to stringstream object and outputs result
 	ss << "-- " << desc << ": " << posOrNeg << "\x9C" << value << " on " << tmBuff;
 	return ss.str();
 }
 
+/// <summary>
+/// Private Overload for float casting, simply returns the internal attribute value
+/// </summary>
 Transaction::operator float() const { return value; }
 
 /// <summary>
 /// Overrides << operator to output correctly formatted data from Transaction object.
 /// </summary>
 /// <param name="os">Output stream object</param>
-/// <param name="a">ref to transaction object</param>
+/// <param name="a">Reference to transaction object</param>
 /// <returns>Output stream object</returns>
 ostream& operator<<(ostream& os, const Transaction& a) { return os << a.toString(); }

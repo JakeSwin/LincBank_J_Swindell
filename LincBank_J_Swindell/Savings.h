@@ -5,6 +5,7 @@
 
 using namespace std;
 
+// Inherits from both Account and interface InterestEarning
 class Savings : public Account, public InterestEarning {
 private:
 	float interestRate;
@@ -15,5 +16,4 @@ public:
 	void deposit(float);
 	void withdraw(float);
 	float computeInterest(float years);
-	friend void transfer(Account*, Account*, float);
 };

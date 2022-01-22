@@ -7,6 +7,7 @@ using namespace std;
 class Current : public Account {
 private:
 	float overdraft;
+	void checkValidWithdrawal(const float& amount, const float& balance, const float& overdraft);
 public:
 	Current(int, float);
 	string toString() const;

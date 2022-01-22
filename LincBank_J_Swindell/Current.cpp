@@ -7,22 +7,11 @@
 
 using namespace std;
 
-void checkValidDeposit(float amount) {
-	if (amount <= 0) {
-		throw invalid_argument("Cannot deposit an ammount of <= £0");
-	}
-}
-
-void checkValidWithdrawal(float amount, float balance, float overdraft) {
+void Current::checkValidWithdrawal(const float& amount, const float& balance, const float& overdraft) {
 	if (amount > overdraft) {
-		throw invalid_argument("Cannot withdraw/transfer over \x9C" + to_string(overdraft) + " as per account overdraft limit.");
+		throw runtime_error("Cannot withdraw/transfer over \x9C" + to_string(overdraft) + " as per account overdraft limit.");
 	}
-	else if (amount > balance) {
-		throw invalid_argument("Cannot withdraw/transfer more than account balance");
-	}
-	else if (amount <= 0) {
-		throw invalid_argument("Cannot withdraw/transfer an ammount of <= £0");
-	}
+	Account::checkValidWithdrawal(amount, balance);
 }
 
 Current::Current(int id, float amount) : Account(id) {

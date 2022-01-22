@@ -7,23 +7,18 @@
 
 using namespace std;
 
-void checkValidWithdrawal(float amount, float balance) {
-	if (amount > balance) {
-		throw invalid_argument("Cannot withdraw/transfer more than account balance");
-	}
-}
-
-void checkValidDeposits(float amount) {
-	if (amount < 0) {
-		throw invalid_argument("Cannot deposit an ammount of <= £0");
-	}
-}
-
+/// <summary>
+/// Constructor for Class Savings,
+/// Initializes ID, isa and provides an intial deposit
+/// </summary>
+/// <param name="id">Account ID</param>
+/// <param name="isIsa">true if ISA</param>
+/// <param name="amount">Initial Deposit</param>
 Savings::Savings(int id, bool isIsa, float amount) : Account(id) {
 	if (isIsa && amount < 1000) {
-		throw invalid_argument("ISA initial balance must be >= 1000");
+		throw runtime_error("ISA initial balance must be >= 1000");
 	}
-	checkValidDeposits(amount);
+	checkValidDeposit(amount);
 
 	interestRate = (isIsa) ? (float)1.15 : (float)0.85;
 	isa = isIsa;
@@ -32,7 +27,7 @@ Savings::Savings(int id, bool isIsa, float amount) : Account(id) {
 }
 
 void Savings::deposit(float amount) {
-	checkValidDeposits(amount);
+	checkValidDeposit(amount);
 	balance += amount;
 	history.push_back(new Transaction(TransactionType::deposit, amount));
 }
@@ -49,7 +44,8 @@ float Savings::computeInterest(float years) {
 
 string Savings::toString() const {
 	stringstream ss;
-	ss << "Savings account | Balance: \x9C" << balance << "\n";
+	string accountType = (isa) ? "ISA" : "Savings";
+	ss << accountType << " account | Balance: \x9C" << balance << "\n";
 	for (auto& t : history) {
 		ss << *t;
 	}
