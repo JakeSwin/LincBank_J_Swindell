@@ -117,7 +117,7 @@ int main()
 				cout << "Successfully opened a new " << newAccountType << " account with balance of \x9C" << initialDeposit << endl;
 				mostRecentAccount = openAccounts[newAccountId];
 			}
-			catch (invalid_argument const& e) {
+			catch (invalid_argument) {
 				// Catches errors in type conversion for stof func
 				cout << "Input parameter must be numerical" << endl;
 			}
@@ -144,7 +144,7 @@ int main()
 					mostRecentAccount = openAccounts[userInput - 1];
 				}
 			}
-			catch (invalid_argument const& e) {
+			catch (invalid_argument) {
 				cout << "Input parameter must be numerical" << endl;
 			}
 			catch (runtime_error const& e) {
@@ -173,7 +173,7 @@ int main()
 					cout << "There is no account to withdraw from" << endl;
 				}
 			}
-			catch (invalid_argument const& e) {
+			catch (invalid_argument) {
 				cout << "Input parameter must be numerical" << endl;
 			}
 			catch (runtime_error const& e) {
@@ -195,7 +195,7 @@ int main()
 					cout << "There is no account to deposit into" << endl;
 				}
 			}
-			catch (invalid_argument const& e) {
+			catch (invalid_argument) {
 				cout << "Input parameter must be numerical" << endl;
 			}
 			catch (runtime_error const& e) {
@@ -222,11 +222,11 @@ int main()
 					Account* From = openAccounts[userFromAccount - 1];
 					Account* To = openAccounts[userToAccount - 1];
 					transfer(*From, *To, amount);
-					
+
 					cout << "Successfully transfered \x9C" << amount << " to account " << To->getId() + 1 << " from account " << From->getId() + 1 << endl;
 				}
 			}
-			catch (invalid_argument const& e) {
+			catch (invalid_argument) {
 				cout << "Input parameter must be numerical" << endl;
 			}
 			catch (runtime_error const& e) {
@@ -256,7 +256,7 @@ int main()
 					}
 				}
 			}
-			catch (invalid_argument const& e) {
+			catch (invalid_argument) {
 				cout << "Input parameter must be numerical" << endl;
 			}
 			catch (runtime_error const& e) {
@@ -278,7 +278,7 @@ int main()
 					cout << *foundTransaction << endl;
 				}
 			}
-			catch (invalid_argument const& e) {
+			catch (invalid_argument) {
 				cout << "Input parameter must be numerical" << endl;
 			}
 			catch (runtime_error const& e) {

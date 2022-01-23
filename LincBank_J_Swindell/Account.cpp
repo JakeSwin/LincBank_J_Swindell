@@ -32,8 +32,7 @@ int Account::getId() const{
 /// Checks if withdrawal amount is valid
 /// </summary>
 /// <param name="amount">Amount to Withdraw/Transfer</param>
-/// <param name="balance">Account's current balance</param>
-void Account::checkValidWithdrawal(const float& amount, const float& balance){
+void Account::checkValidWithdrawal(const float& amount){
 	if (amount > balance) {
 		throw runtime_error("Cannot withdraw/transfer more than account balance");
 	}
@@ -185,31 +184,40 @@ Transaction* Account::findTransactionByAmount(float amount) {
 }
 
 /// <summary>
-/// Transfers ammount to specified account
+/// Deposits valid amount into account
 /// </summary>
-/// <param name="to">Account to transfer to</param>
-/// <param name="amount">Amount to transfer</param>
-void Account::transferTo(Account* to, float amount) {
-	// Check that amount is valid
-	checkValidWithdrawal(amount, balance);
-	balance -= amount;
-	history.push_back(new Transaction(TransactionType::transferTo, to->getId(), amount));
-	to->transferFrom(this, amount);
+/// <param name="amount">Amount to deposit</param>
+void Account::deposit(float amount)
+{
+	// Calls virtual function to check deposit is valid.
+	// Child classes can implement their own checkValidDeposit method for more strict checks 
+	checkValidDeposit(amount);
+	balance += amount;
+	history.push_back(new Transaction(TransactionType::deposit, amount));
 }
 
 /// <summary>
-/// Accepts Transfers from other accounts
+/// Withdraws valid amount from account
 /// </summary>
-/// <param name="from">Account that the transfer is from</param>
-/// <param name="amount">Amount to transfer</param>
-void Account::transferFrom(Account* from, float amount) {
-	balance += amount;
-	history.push_back(new Transaction(TransactionType::transferFrom, from->getId(), amount));
+/// <param name="amount">Amount to withdraw</param>
+void Account::withdraw(float amount) {
+	// Calls virtual function to check withdrawal is valid.
+	// Child classes can implement their own checkValid method for more strict checks 
+	// An example of this is in Current.cpp, since current accounts cannot withdraw more than their overdraft.
+	// Since method is virtual, the overridden function is called here.
+	checkValidWithdrawal(amount);
+	balance -= amount;
+	history.push_back(new Transaction(TransactionType::withdraw, amount));
 }
 
-
+/// <summary>
+/// Transfers a set amount between two Accounts
+/// </summary>
+///<param name = "from">Amount the transfer is from</param>
+///<param name = "to">Amount the transfer is to</param>
+///<param name = "amount">Amount to transfer</param>
 void transfer(Account& from, Account& to, float amount) {
-	Account::checkValidWithdrawal(amount, from.balance);
+	from.checkValidWithdrawal(amount);
 	from.balance -= amount;
 	to.balance += amount;
 	from.history.push_back(new Transaction(TransactionType::transferTo, to.getId(), amount));

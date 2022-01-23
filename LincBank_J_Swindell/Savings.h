@@ -13,7 +13,6 @@ private:
 public:
 	Savings(int, bool, float);
 	string toString() const;
-	void deposit(float);
-	void withdraw(float);
+	// Implementation for interface InterestEarning
 	float computeInterest(float years);
 };

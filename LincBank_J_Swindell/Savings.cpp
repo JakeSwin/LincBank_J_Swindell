@@ -1,4 +1,3 @@
-#define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
 #include <sstream>
 #include <string>
@@ -26,26 +25,25 @@ Savings::Savings(int id, bool isIsa, float amount) : Account(id) {
 	history.push_back(new Transaction(TransactionType::initialDeposit, amount));
 }
 
-void Savings::deposit(float amount) {
-	checkValidDeposit(amount);
-	balance += amount;
-	history.push_back(new Transaction(TransactionType::deposit, amount));
-}
-
-void Savings::withdraw(float amount) {
-	checkValidWithdrawal(amount, balance);
-	balance -= amount;
-	history.push_back(new Transaction(TransactionType::withdraw, amount));
-}
-
+/// <summary>
+/// Projects the Savings Account's balance in X years based on it's interest rate
+/// </summary>
+/// <param name="years">How many year to project interest for</param>
+/// <returns>Accont's Projected balance</returns>
 float Savings::computeInterest(float years) {
 	return balance * pow((1 + (interestRate / 100) / 12), 12 * years);
 }
 
+/// <summary>
+/// Formats and returns output information of Savings Account
+/// </summary>
+/// <returns>Formatted output string of Savings Account</returns>
 string Savings::toString() const {
 	stringstream ss;
 	string accountType = (isa) ? "ISA" : "Savings";
 	ss << accountType << " account | Balance: \x9C" << balance << "\n";
+	// For every Transaction object in history, append its contents to stringstream
+	// Uses Transactions overridden << operator
 	for (auto& t : history) {
 		ss << *t;
 	}
