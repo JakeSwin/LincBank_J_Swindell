@@ -37,7 +37,7 @@ void Account::checkValidWithdrawal(const float& amount){
 		throw runtime_error("Cannot withdraw/transfer more than account balance");
 	}
 	else if (amount <= 0) {
-		throw runtime_error("Cannot withdraw/transfer an ammount of <= £0");
+		throw runtime_error("Cannot withdraw/transfer an ammount of <= \x9C 0");
 	}
 }
 
@@ -47,7 +47,7 @@ void Account::checkValidWithdrawal(const float& amount){
 /// <param name="amount">Amount to Deposit</param>
 void Account::checkValidDeposit(const float& amount){
 	if (amount <= 0) {
-		throw runtime_error("Cannot deposit an ammount of <= £0");
+		throw runtime_error("Cannot deposit an amount of <= \x9C 0");
 	}
 }
 
@@ -189,8 +189,6 @@ Transaction* Account::findTransactionByAmount(float amount) {
 /// <param name="amount">Amount to deposit</param>
 void Account::deposit(float amount)
 {
-	// Calls virtual function to check deposit is valid.
-	// Child classes can implement their own checkValidDeposit method for more strict checks 
 	checkValidDeposit(amount);
 	balance += amount;
 	history.push_back(new Transaction(TransactionType::deposit, amount));
@@ -200,11 +198,10 @@ void Account::deposit(float amount)
 /// Withdraws valid amount from account
 /// </summary>
 /// <param name="amount">Amount to withdraw</param>
-void Account::withdraw(float amount) {
-	// Calls virtual function to check withdrawal is valid.
-	// Child classes can implement their own checkValid method for more strict checks 
-	// An example of this is in Current.cpp, since current accounts cannot withdraw more than their overdraft.
-	// Since method is virtual, the overridden function is called here.
+void Account::withdraw(float amount) 
+{
+	// Current.cpp will overide this method 
+	// This ensures that the correct error checking will be performed for current accounts
 	checkValidWithdrawal(amount);
 	balance -= amount;
 	history.push_back(new Transaction(TransactionType::withdraw, amount));
@@ -220,8 +217,8 @@ void transfer(Account& from, Account& to, float amount) {
 	from.checkValidWithdrawal(amount);
 	from.balance -= amount;
 	to.balance += amount;
-	from.history.push_back(new Transaction(TransactionType::transferTo, to.getId(), amount));
-	to.history.push_back(new Transaction(TransactionType::transferFrom, from.getId(), amount));
+	from.history.push_back(new Transaction(TransactionType::transferTo, to.getId() + 1, amount));
+	to.history.push_back(new Transaction(TransactionType::transferFrom, from.getId() + 1, amount));
 }
 
 /// <summary>

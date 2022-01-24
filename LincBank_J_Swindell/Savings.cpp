@@ -17,7 +17,7 @@ Savings::Savings(int id, bool isIsa, float amount) : Account(id) {
 	if (isIsa && amount < 1000) {
 		throw runtime_error("ISA initial balance must be >= 1000");
 	}
-	checkValidDeposit(amount);
+	else if (amount != 0) { checkValidDeposit(amount); }
 
 	interestRate = (isIsa) ? (float)1.15 : (float)0.85;
 	isa = isIsa;

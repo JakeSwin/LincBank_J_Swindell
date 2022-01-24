@@ -7,17 +7,17 @@
 using namespace std;
 
 /// <summary>
-/// Overides base account checkValidWithdrawal, also checks if amount is less than overdraft
+/// Overides base account checkValidWithdrawal, also checks if amount is less than balance + overdraft
 /// </summary>
 /// <param name="amount">Amount to Withdraw/Transfer</param>
 void Current::checkValidWithdrawal(const float& amount) {
 	// Adds an additional withdrawal check to current accounts
-	if (amount > overdraft) {
+	if (amount > (balance + overdraft)) {
 		throw runtime_error("Cannot withdraw/transfer over \x9C" + to_string(overdraft) + " as per account overdraft limit.");
 	}
-	// Then checks using the base class metod
-	Account::checkValidWithdrawal(amount);
-	// This method is virtual and will be called inside Account::withdraw and Account::transfer
+	else if (amount <= 0) {
+		throw runtime_error("Cannot withdraw/transfer an ammount of <= \x9C 0");
+	}
 }
 
 /// <summary>
@@ -26,7 +26,7 @@ void Current::checkValidWithdrawal(const float& amount) {
 /// <param name="id">Account ID</param>
 /// <param name="amount">Initial Deposit Amount</param>
 Current::Current(int id, float amount) : Account(id) {
-	checkValidDeposit(amount);
+	if (amount != 0) { checkValidDeposit(amount); }
 	balance = amount;
 	overdraft = (float)500;
 	history.push_back(new Transaction(TransactionType::initialDeposit, amount));

@@ -60,6 +60,8 @@ int main()
 	vector <string> parameters;
     string userCommand;
 	vector <Account*> openAccounts;
+	bool hasCurrent = false;
+	bool hasISA = false;
 	Account* mostRecentAccount{};
 
 	cout << "~~~ Welcome to LincBank! ~~~" << endl;
@@ -67,22 +69,24 @@ int main()
 
     while (userCommand != "exit")
     {
-		parameters.clear(); // clear ready for next command
-		cout << endl << ">>> ";
+		// Added loop to prevent error when no parameters are passed.
+		do {
+			parameters.clear(); // clear ready for next command
+			cout << endl << ">>> ";
 
-		getline(cin, userCommand);
-		char* cstr = new char[userCommand.length() + 1];
-		strcpy(cstr, userCommand.c_str());
+			getline(cin, userCommand);
+			char* cstr = new char[userCommand.length() + 1];
+			strcpy(cstr, userCommand.c_str());
 
-		char* token;
-		token = strtok(cstr, " ");
+			char* token;
+			token = strtok(cstr, " ");
 
-		while (token != NULL)
-		{
-			parameters.push_back(token);
-			token = strtok(NULL, " ");
-		}
-
+			while (token != NULL)
+			{
+				parameters.push_back(token);
+				token = strtok(NULL, " ");
+			}
+		} while (parameters.empty());
 		// Define all commands as per the brief
 		string command = parameters[0];
 
@@ -102,7 +106,9 @@ int main()
 				// Create appropriate Account type based on user input
 				switch (stoi(parameters[1])) {
 				case 1:
+					if (hasCurrent) { throw runtime_error("You cannot have more than 1 Current Account"); }
 					openAccounts.push_back(new Current(newAccountId, initialDeposit));
+					hasCurrent = true;
 					newAccountType = "Current";
 					break;
 				case 2:
@@ -110,7 +116,9 @@ int main()
 					newAccountType = "Savings";
 					break;
 				case 3:
+					if (hasISA) { throw runtime_error("You cannot have more than 1 ISA Account"); }
 					openAccounts.push_back(new Savings(newAccountId, true, initialDeposit));
+					hasISA = true;
 					newAccountType = "ISA";
 					break;
 				}
@@ -223,7 +231,7 @@ int main()
 					Account* To = openAccounts[userToAccount - 1];
 					transfer(*From, *To, amount);
 
-					cout << "Successfully transfered \x9C" << amount << " to account " << To->getId() + 1 << " from account " << From->getId() + 1 << endl;
+					cout << "Successfully transferred \x9C" << amount << " to account " << To->getId() + 1 << " from account " << From->getId() + 1 << endl;
 				}
 			}
 			catch (invalid_argument) {
